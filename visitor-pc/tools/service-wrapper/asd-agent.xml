@@ -1,0 +1,32 @@
+<!--
+  WinSW (v3) configuration: turns the Node agent into a Windows service running as SYSTEM.
+  install-agent.ps1 copies this file next to the WinSW executable (renamed asd-agent.exe)
+  and replaces __NODE_EXE__ with the real path to node.exe.
+  UNTESTED(windows)
+-->
+<service>
+  <id>asd-agent</id>
+  <name>ASD Lab Lock Agent</name>
+  <description>Keeps this visitor PC locked until the registration desk unlocks it.</description>
+
+  <!-- %BASE% = the folder this file is in (C:\Program Files\AsdLabLock\agent) -->
+  <executable>__NODE_EXE__</executable>
+  <arguments>"%BASE%\main.js"</arguments>
+  <workingdirectory>%BASE%</workingdirectory>
+
+  <!-- Runs as SYSTEM (WinSW's default account), starts at boot -->
+  <startmode>Automatic</startmode>
+
+  <!-- If the agent crashes, start it again; state.json keeps the lock state -->
+  <onfailure action="restart" delay="5 sec"/>
+  <onfailure action="restart" delay="10 sec"/>
+  <onfailure action="restart" delay="30 sec"/>
+  <resetfailure>1 hour</resetfailure>
+
+  <!-- On "stop", WinSW sends Ctrl+C (the agent handles it as SIGINT and shuts down cleanly) -->
+  <stoptimeout>15 sec</stoptimeout>
+
+  <!-- The agent writes its own rotated logs to %ProgramData%\AsdLabLock\logs;
+       this only keeps WinSW's console capture small -->
+  <log mode="roll"/>
+</service>
