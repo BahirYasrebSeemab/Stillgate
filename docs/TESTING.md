@@ -31,8 +31,8 @@ Mark each line: `[ ]` not tested · `[x]` works · `[!]` broken (write what happ
 
 ## C. Visitor PC install (dry-run on, audit on)
 - [ ] Kiosk user created as **standard** user; separate admin account exists
-- [ ] `install-agent.ps1` succeeds; `C:\ProgramData\AsdLabLock` ACL = SYSTEM + Administrators; `shell\` also readable by kiosk user
-- [ ] Service `asd-agent` runs as LocalSystem, restarts after `taskkill /F` on its node.exe
+- [ ] `install-agent.ps1` succeeds; `C:\ProgramData\Stillgate` ACL = SYSTEM + Administrators; `shell\` also readable by kiosk user
+- [ ] Service `stillgate-agent` runs as LocalSystem, restarts after `taskkill /F` on its node.exe
 - [ ] `cli.js status` shows dry-run ON, audit, kiosk user set
 - [ ] `agent.log` shows the planned `reg` commands (dry_run events) and nothing is actually changed
 - [ ] Pairing with the manager works; the PC appears online; "synced"

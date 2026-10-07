@@ -12,7 +12,7 @@ On the locked screen press **Space + B + Y + S** (together, or one after another
 ## 2. Run the emergency restore script (as administrator)
 Open **PowerShell as Administrator** and run:
 ```powershell
-powershell -ExecutionPolicy Bypass -File "C:\Program Files\AsdLabLock\tools\emergency-restore.ps1" -KioskUser kiosk -DisableAgent
+powershell -ExecutionPolicy Bypass -File "C:\Program Files\Stillgate\tools\emergency-restore.ps1" -KioskUser kiosk -DisableAgent
 shutdown /r /t 0
 ```
 (If the tools folder isn't on the PC, copy `tools\scripts\emergency-restore.ps1` from the repo on a USB stick.)
@@ -27,15 +27,15 @@ The script: stops the agent → sets the kiosk user's `Shell` to `explorer.exe` 
 ## 3. By hand (if scripts can't run)
 In an **administrator Command Prompt**:
 ```bat
-sc stop asd-agent
-sc config asd-agent start= disabled
+sc stop stillgate-agent
+sc config stillgate-agent start= disabled
 reg load HKU\KioskFix C:\Users\kiosk\NTUSER.DAT
 reg add "HKU\KioskFix\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Shell /t REG_SZ /d explorer.exe /f
 reg unload HKU\KioskFix
 shutdown /r /t 0
 ```
-- `sc stop asd-agent`: `sc` is the Service Control tool; `stop` stops the service named `asd-agent`.
-- `sc config asd-agent start= disabled`: don't start it at boot. (The space after `start=` is required.)
+- `sc stop stillgate-agent`: `sc` is the Service Control tool; `stop` stops the service named `stillgate-agent`.
+- `sc config stillgate-agent start= disabled`: don't start it at boot. (The space after `start=` is required.)
 - `reg load HKU\KioskFix C:\Users\kiosk\NTUSER.DAT`: mounts the kiosk user's registry file under the temporary name `HKU\KioskFix`. If it says the file is in use, the kiosk user is signed in: use `HKU\<kiosk SID>` instead and skip load/unload (find the SID with `wmic useraccount where name='kiosk' get sid`).
 - `reg add "<key>" /v Shell /t REG_SZ /d explorer.exe /f`: `/v` value name `Shell`, `/t` type text, `/d` data `explorer.exe`, `/f` don't ask.
 - `reg unload HKU\KioskFix`: unmount it again (important: an un-unloaded hive can corrupt the profile).
@@ -48,7 +48,7 @@ The admin sets a new one in the manager ("Restore password"). Online PCs get it 
 
 ## 6. Turning the agent back on afterwards
 ```powershell
-Set-Service -Name asd-agent -StartupType Automatic
-Start-Service -Name asd-agent
+Set-Service -Name stillgate-agent -StartupType Automatic
+Start-Service -Name stillgate-agent
 ```
 The agent re-applies the lockdown and sets the kiosk shell again at its next start (only when dry-run is off).

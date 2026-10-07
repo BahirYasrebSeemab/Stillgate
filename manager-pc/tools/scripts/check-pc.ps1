@@ -46,7 +46,7 @@ else {
 $edge = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 if (Test-Path $edge) { Report OK "Microsoft Edge found" } else { Report FAIL "Edge not found at $edge" }
 
-$service = Get-Service -Name "asd-agent" -ErrorAction SilentlyContinue
+$service = Get-Service -Name "stillgate-agent" -ErrorAction SilentlyContinue
 if ($null -eq $service) { Report INFO "agent service not installed yet" }
 else { Report INFO "agent service: $($service.Status)" }
 

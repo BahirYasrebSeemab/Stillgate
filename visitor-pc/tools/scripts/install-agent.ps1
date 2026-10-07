@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Installs the ASD Lab Lock agent service and kiosk shell on ONE visitor PC.
+  Installs the Stillgate agent service and kiosk shell on ONE visitor PC.
 .DESCRIPTION
   Run as Administrator on the visitor PC. Before running:
     - Node.js LTS is installed (default path below)
@@ -9,8 +9,8 @@
       the built kiosk shell folder (from `bun run dist` in packages/kiosk-shell),
       and WinSW-x64.exe (downloaded yourself, see tools/service-wrapper/README.md)
   What it does:
-    1. copies the agent and kiosk shell into C:\Program Files\AsdLabLock
-    2. creates C:\ProgramData\AsdLabLock with strict permissions
+    1. copies the agent and kiosk shell into C:\Program Files\Stillgate
+    2. creates C:\ProgramData\Stillgate with strict permissions
     3. installs and starts the service
     4. tells the agent who the kiosk user is
   It does NOT change the kiosk user's shell: the agent does that itself, and only after you
@@ -51,11 +51,11 @@ try {
   Write-Warning "Could not list the Administrators group. CHECK BY HAND that '$KioskUser' is a standard user."
 }
 
-$programDir = "C:\Program Files\AsdLabLock"
+$programDir = "C:\Program Files\Stillgate"
 $agentDir = "$programDir\agent"
 $kioskDir = "$programDir\kiosk-shell"
 $toolsDir = "$programDir\tools"
-$dataDir = "C:\ProgramData\AsdLabLock"
+$dataDir = "C:\ProgramData\Stillgate"
 $shellDir = "$dataDir\shell"
 
 # 1. Program files
@@ -63,9 +63,9 @@ New-Item -ItemType Directory -Force -Path $agentDir, $kioskDir, $toolsDir | Out-
 Copy-Item "$PSScriptRoot\emergency-restore.ps1" -Destination $toolsDir -Force   # for docs/RECOVERY.md
 Copy-Item "$AgentSource\main.js", "$AgentSource\cli.js" -Destination $agentDir -Force
 Copy-Item "$KioskShellSource\*" -Destination $kioskDir -Recurse -Force
-Copy-Item $WinSWExe -Destination "$agentDir\asd-agent.exe" -Force
-(Get-Content "$PSScriptRoot\..\service-wrapper\asd-agent.xml" -Raw).Replace("__NODE_EXE__", $NodeExe) |
-  Set-Content -Path "$agentDir\asd-agent.xml" -Encoding UTF8
+Copy-Item $WinSWExe -Destination "$agentDir\stillgate-agent.exe" -Force
+(Get-Content "$PSScriptRoot\..\service-wrapper\stillgate-agent.xml" -Raw).Replace("__NODE_EXE__", $NodeExe) |
+  Set-Content -Path "$agentDir\stillgate-agent.xml" -Encoding UTF8
 
 # 2. Data folder: only SYSTEM (S-1-5-18) and Administrators (S-1-5-32-544).
 #    SIDs are used instead of names, so this also works on Russian/Tajik Windows.
@@ -77,8 +77,8 @@ New-Item -ItemType Directory -Force -Path $dataDir, $shellDir | Out-Null
 & icacls.exe $shellDir /grant "*${sid}:(OI)(CI)RX" | Out-Null
 
 # 3. Service
-& "$agentDir\asd-agent.exe" install
-& "$agentDir\asd-agent.exe" start
+& "$agentDir\stillgate-agent.exe" install
+& "$agentDir\stillgate-agent.exe" start
 
 # 4. Tell the agent who the kiosk user is
 & $NodeExe "$agentDir\cli.js" init --kiosk-user $KioskUser --kiosk-sid $sid --shell-exe "$kioskDir\kiosk-shell.exe"

@@ -15,11 +15,11 @@
 param(
   [Parameter(Mandatory)] [string[]]$VisitorIPs,
   [int]$Port = 47800,
-  [string]$ManagerExe = "C:\Program Files\ASD Lab Manager\ASD Lab Manager.exe"
+  [string]$ManagerExe = "C:\Program Files\Stillgate Manager\Stillgate Manager.exe"
 )
 
 $ErrorActionPreference = "Stop"
-$ruleName = "ASD Lab Lock - agents"
+$ruleName = "Stillgate - agents"
 
 foreach ($ip in $VisitorIPs) {
   if (-not ($ip -as [System.Net.IPAddress])) { throw "Not an IP address: $ip" }

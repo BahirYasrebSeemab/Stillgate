@@ -15,7 +15,7 @@
 #>
 param(
   [string]$KioskUser = "kiosk",
-  # Also stop the agent from starting again at boot (re-enable with: Set-Service asd-agent -StartupType Automatic)
+  # Also stop the agent from starting again at boot (re-enable with: Set-Service stillgate-agent -StartupType Automatic)
   [switch]$DisableAgent
 )
 
@@ -27,10 +27,10 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 }
 
 # 1. Stop the agent first, otherwise it would put the kiosk shell back
-$service = Get-Service -Name "asd-agent" -ErrorAction SilentlyContinue
+$service = Get-Service -Name "stillgate-agent" -ErrorAction SilentlyContinue
 if ($null -ne $service) {
-  Stop-Service -Name "asd-agent" -Force -ErrorAction SilentlyContinue
-  if ($DisableAgent) { Set-Service -Name "asd-agent" -StartupType Disabled }
+  Stop-Service -Name "stillgate-agent" -Force -ErrorAction SilentlyContinue
+  if ($DisableAgent) { Set-Service -Name "stillgate-agent" -StartupType Disabled }
   Write-Host "Agent service stopped." -ForegroundColor Yellow
 }
 

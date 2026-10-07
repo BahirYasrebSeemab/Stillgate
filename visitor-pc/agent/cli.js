@@ -23565,7 +23565,7 @@ var require_pairing = __commonJS(function(exports2) {
   var constants_1 = require_constants();
   var result_1 = require_result();
   var site_pattern_1 = require_site_pattern();
-  exports2.PAIRING_PREFIX = "asd1";
+  exports2.PAIRING_PREFIX = "sg1";
   var FINGERPRINT = /^[0-9a-f]{64}$/;
   var MAX_PORT = 65535;
   function encodePairing(info) {
@@ -24297,11 +24297,11 @@ var require_paths = __commonJS(function(exports2) {
   exports2.shellTokenFile = shellTokenFile;
   var node_path_1 = require("node:path");
   function agentDataDir(env = process.env) {
-    const override = env["ASD_DATA_DIR"];
+    const override = env["STILLGATE_DATA_DIR"];
     if (override !== undefined)
       return override;
     const programData = env["ProgramData"];
-    return programData === undefined ? (0, node_path_1.join)(process.cwd(), ".dev-data", "agent") : (0, node_path_1.join)(programData, "AsdLabLock");
+    return programData === undefined ? (0, node_path_1.join)(process.cwd(), ".dev-data", "agent") : (0, node_path_1.join)(programData, "Stillgate");
   }
   function shellTokenFile(env = process.env) {
     return (0, node_path_1.join)(agentDataDir(env), "shell", "shell-token");
